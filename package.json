@@ -1,0 +1,19 @@
+{
+  "name": "analyzeer",
+  "version": "1.0.0",
+  "description": "Analyzeer compiles data from your Deezer profile to give you an overview of your listening habits and trends.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GitSquared/analyzeer.git"
+  },
+  "author": "Squared <squared@codebrew.fr> (https://squared.codebrew.fr)",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/GitSquared/analyzeer/issues"
+  },
+  "homepage": "https://github.com/GitSquared/analyzeer#readme"
+}

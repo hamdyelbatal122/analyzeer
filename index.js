@@ -10,9 +10,9 @@ parseSettings().then(startServer);
 
 async function parseSettings() {
     let json = JSON.parse(process.env.APP_SETTINGS);
-    global._deezer = {
-        appid: json.appid,
-        key: json.secret_key
+    global._deezerapp = {
+        id: json.appid,
+        secret: json.secret_key
     };
 }
 
@@ -35,9 +35,30 @@ async function startServer() {
         if (req.query.error_reason) {
             res.send(global._static.autherror);
         } else if (req.query.code) {
-            // We got it!
+            let api = new DeezerAPIConnection();
+            api.connect(global._deezerapp, req.query.code).then(() => {
+                let object = {};
+                object._authCode = api.oauthCode;
+                api.getUserInfo().then(u => {
+                    object.user = u;
+                    return api.getFavoriteTracks();
+                }).then(t => {
+                    object.tracks = t;
+                    return api.getTopTracks();
+                }).then(tp => {
+                    object.top = tp;
+                    return api.getLastHundred();
+                }).then(h => {
+                    object.history = h;
+                    res.json(object);
+                }).catch(e => {
+                    res.status(500).send(e);
+                });
+            }).catch(e => {
+                res.status(500).send(e);
+            });
         } else {
-            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezer.appid}&redirect_uri=https://analyzeer.squared.codebrew.fr&perms=basic_access,listening_history`);
+            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=https://analyzeer.squared.codebrew.fr&perms=basic_access,listening_history`);
         }
     });
 

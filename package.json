@@ -4,7 +4,8 @@
   "description": "Analyzeer compiles data from your Deezer profile to give you an overview of your listening habits and trends.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "deploy": "now && now alias"
   },
   "repository": {
     "type": "git",
@@ -17,7 +18,9 @@
   },
   "homepage": "https://github.com/GitSquared/analyzeer#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "express": "^4.16.3",
+    "request": "^2.87.0",
+    "request-promise-native": "^1.0.5"
   },
   "devDependencies": {
     "now-env": "^3.1.0"

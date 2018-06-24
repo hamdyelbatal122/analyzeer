@@ -24,6 +24,38 @@ async function loadStatics() {
     });
 }
 
+async function harvestAPI(code) {
+    let data = {};
+    let api = new DeezerAPIConnection();
+    api.connect(global._deezerapp, code).then(() => {
+        api.getUserInfo().then(u => {
+            data.user = u;
+            return api.getFavoriteTracks();
+        }).then(t => {
+            data.tracks = t;
+            return api.getTopTracks();
+        }).then(tp => {
+            data.top = tp;
+            return api.getLastHundred();
+        }).then(h => {
+            data.history = h;
+            return data;
+        }).catch(e => {
+            throw(e);
+        });
+    }).catch(e => {
+        throw(e);
+    });
+}
+
+async function buildReport(data) {
+    return data;
+}
+
+async function renderHTML(report) {
+    return JSON.stringify(report);
+}
+
 async function startServer() {
     await loadStatics();
 
@@ -35,27 +67,14 @@ async function startServer() {
         if (req.query.error_reason) {
             res.send(global._static.autherror);
         } else if (req.query.code) {
-            let api = new DeezerAPIConnection();
-            api.connect(global._deezerapp, req.query.code).then(() => {
-                let object = {};
-                object._authCode = api.oauthCode;
-                api.getUserInfo().then(u => {
-                    object.user = u;
-                    return api.getFavoriteTracks();
-                }).then(t => {
-                    object.tracks = t;
-                    return api.getTopTracks();
-                }).then(tp => {
-                    object.top = tp;
-                    return api.getLastHundred();
-                }).then(h => {
-                    object.history = h;
-                    res.json(object);
-                }).catch(e => {
-                    res.status(500).send(e);
-                });
+            harvestAPI(req.query.code).then(data => {
+                return buildReport(data);
+            }).then(report => {
+                return renderHTML(report);
+            }).then(html => {
+                res.send(html);
             }).catch(e => {
-                res.status(500).send(e);
+                res.status(500).send(global._static.internerror);
             });
         } else {
             res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=https://analyzeer.squared.codebrew.fr&perms=basic_access,listening_history`);

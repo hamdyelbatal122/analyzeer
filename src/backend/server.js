@@ -25,27 +25,27 @@ async function loadStatics() {
             if (process.env.DEV_MODE === "ACTIVATED") {
                 return fs.readFileSync("src/webapp/index.html", {encoding: "utf-8"});
             } else {
-                return this.app;
+                return this._app;
             }
         },
         get appbundle() {
             if (process.env.DEV_MODE === "ACTIVATED") {
                 return fs.readFileSync("src/webapp/dist/bundle.js", {encoding: "utf-8"});
             } else {
-                return this.appbundle;
+                return this._appbundle;
             }
         }
     };
     fs.readdirSync("src/static").forEach(file => {
         let name = file.replace(/\.[^/.]+$/ , "");
-        global._static[name] = fs.readFileSync("src/static/"+file, {encoding: "utf-8"});
+        global._static["_"+name] = fs.readFileSync("src/static/"+file, {encoding: "utf-8"});
 
         Object.defineProperty(global._static, name, {
             get: function() {
                 if (process.env.DEV_MODE === "ACTIVATED") {
                     return fs.readFileSync("src/static"+file, {encoding: "utf-8"});
                 } else {
-                    return this[name];
+                    return this["_"+name];
                 }
             }
         });
@@ -91,7 +91,7 @@ async function startServer() {
         } else if (req.query.code) {
             res.send(global._static.app);
         } else {
-            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global.__deezerapp.url}&perms=basic_access,listening_history`);
+            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global._deezerapp.url}&perms=basic_access,listening_history`);
         }
     });
 

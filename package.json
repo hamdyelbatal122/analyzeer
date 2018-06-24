@@ -4,7 +4,7 @@
   "description": "Analyzeer compiles data from your Deezer profile to give you an overview of your listening habits and trends.",
   "scripts": {
     "build": "npx webpack --config webpack.config.js",
-    "start": "node src/backend/server.js",
+    "start": "node backend/server.js",
     "deploy": "now && now alias",
     "clean": "now rm analyzeer --safe --yes",
     "live-backend": "export DEV_MODE=\"ACTIVATED\" && npm run start",

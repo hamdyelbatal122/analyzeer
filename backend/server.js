@@ -23,47 +23,47 @@ async function loadStatics() {
     global._static = {
         get app() {
             if (process.env.DEV_MODE === "ACTIVATED") {
-                return fs.readFileSync("src/webapp/index.html", {encoding: "utf-8"});
+                return fs.readFileSync("./webapp/index.html", {encoding: "utf-8"});
             } else {
                 return this._app;
             }
         },
         get appbundle() {
             if (process.env.DEV_MODE === "ACTIVATED") {
-                return fs.readFileSync("src/webapp/dist/bundle.js", {encoding: "utf-8"});
+                return fs.readFileSync("./webapp/dist/bundle.js", {encoding: "utf-8"});
             } else {
                 return this._appbundle;
             }
         }
     };
-    fs.readdirSync("src/static").forEach(file => {
+    fs.readdirSync("./static").forEach(file => {
         let name = file.replace(/\.[^/.]+$/ , "");
         if (file === name) return false; // Prevent trying to read directories
-        global._static["_"+name] = fs.readFileSync("src/static/"+file, {encoding: "utf-8"});
+        global._static["_"+name] = fs.readFileSync("./static/"+file, {encoding: "utf-8"});
 
         Object.defineProperty(global._static, name, {
             get: function() {
                 if (process.env.DEV_MODE === "ACTIVATED") {
-                    return fs.readFileSync("src/static/"+file, {encoding: "utf-8"});
+                    return fs.readFileSync("./static/"+file, {encoding: "utf-8"});
                 } else {
                     return this["_"+name];
                 }
             }
         });
     });
-    global._static._app = fs.readFileSync("src/webapp/index.html", {encoding: "utf-8"});
-    global._static._appbundle = fs.readFileSync("src/webapp/dist/bundle.js", {encoding: "utf-8"});
+    global._static._app = fs.readFileSync("./webapp/index.html", {encoding: "utf-8"});
+    global._static._appbundle = fs.readFileSync("./webapp/dist/bundle.js", {encoding: "utf-8"});
 
     global._static.res = {};
-    fs.readdirSync("src/static/res").forEach(file => {
+    fs.readdirSync("./static/res").forEach(file => {
         let name = file.replace(/\.[^/.]+$/ , "");
         if (file === name) return false; // Prevent trying to read directories
-        global._static.res["_"+name] = fs.readFileSync("src/static/res/"+file, {encoding: "utf-8"});
+        global._static.res["_"+name] = fs.readFileSync("./static/res/"+file, {encoding: "utf-8"});
 
         Object.defineProperty(global._static.res, name, {
             get: function() {
                 if (process.env.DEV_MODE === "ACTIVATED") {
-                    return fs.readFileSync("src/static/res/"+file, {encoding: "utf-8"});
+                    return fs.readFileSync("./static/res/"+file, {encoding: "utf-8"});
                 } else {
                     return this["_"+name];
                 }

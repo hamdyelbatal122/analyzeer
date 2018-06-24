@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./src/webapp/index.js",
+    entry: "./webapp/index.js",
     mode: "production",
     module: {
         rules: [
@@ -10,6 +10,6 @@ module.exports = {
     },
     output: {
         filename: "bundle.js",
-        path: path.resolve(__dirname, "src/webapp/dist")
+        path: path.resolve(__dirname, "webapp/dist")
     }
 };

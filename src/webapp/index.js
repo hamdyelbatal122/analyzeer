@@ -1,4 +1,5 @@
 import io from "socket.io-client";
+import WOW from "wowjs";
 
 const socket = io();
 const code = window.location.search.slice(6);
@@ -20,5 +21,6 @@ socket.emit("apiconnect", code, res => {
 });
 
 function render(data) {
+    new WOW().init();
     document.body.append(JSON.stringify(data));
 }

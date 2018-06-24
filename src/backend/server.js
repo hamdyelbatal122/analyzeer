@@ -38,6 +38,7 @@ async function loadStatics() {
     };
     fs.readdirSync("src/static").forEach(file => {
         let name = file.replace(/\.[^/.]+$/ , "");
+        if (file === name) return false; // Prevent trying to read directories
         global._static["_"+name] = fs.readFileSync("src/static/"+file, {encoding: "utf-8"});
 
         Object.defineProperty(global._static, name, {
@@ -52,6 +53,23 @@ async function loadStatics() {
     });
     global._static._app = fs.readFileSync("src/webapp/index.html", {encoding: "utf-8"});
     global._static._appbundle = fs.readFileSync("src/webapp/dist/bundle.js", {encoding: "utf-8"});
+
+    global._static.res = {};
+    fs.readdirSync("src/static/res").forEach(file => {
+        let name = file.replace(/\.[^/.]+$/ , "");
+        if (file === name) return false; // Prevent trying to read directories
+        global._static.res["_"+name] = fs.readFileSync("src/static/res/"+file, {encoding: "utf-8"});
+
+        Object.defineProperty(global._static.res, name, {
+            get: function() {
+                if (process.env.DEV_MODE === "ACTIVATED") {
+                    return fs.readFileSync("src/static/res/"+file, {encoding: "utf-8"});
+                } else {
+                    return this["_"+name];
+                }
+            }
+        });
+    });
 }
 
 async function harvestAPI(api) {
@@ -77,12 +95,21 @@ async function startServer() {
         } else if (req.query.code) {
             res.send(global._static.app);
         } else {
-            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global._deezerapp.url}&perms=basic_access,listening_history`);
+            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global._deezerapp.url}&perms=basic_access,listening_history,offline_access`);
         }
     });
 
     app.get("/bundle.js", (req, res) => {
         res.send(global._static.appbundle);
+    });
+    app.get("/res/:file", (req, res ) => {
+        let resource = global._static.res[req.params.file.replace(/\.[^/.]+$/ , "")];
+        let type = req.params.file.split('.').pop();
+        if (resource) {
+            res.type(type).send(resource);
+        } else {
+            res.status(404).send("Not Found");
+        }
     });
     app.get("/500", (req, res) => {
         res.send(global._static.internerror);

@@ -12,15 +12,43 @@ async function parseSettings() {
     let json = JSON.parse(process.env.APP_SETTINGS);
     global._deezerapp = {
         id: json.appid,
-        secret: json.secret_key
+        secret: json.secret_key,
+        url: json.url,
+        port: json.port
     };
 }
 
 async function loadStatics() {
     let fs = require("fs");
-    global._static = {};
+    global._static = {
+        get app() {
+            if (process.env.DEV_MODE === "ACTIVATED") {
+                return fs.readFileSync("src/webapp/index.html", {encoding: "utf-8"});
+            } else {
+                return this.app;
+            }
+        },
+        get appbundle() {
+            if (process.env.DEV_MODE === "ACTIVATED") {
+                return fs.readFileSync("src/webapp/dist/bundle.js", {encoding: "utf-8"});
+            } else {
+                return this.appbundle;
+            }
+        }
+    };
     fs.readdirSync("src/static").forEach(file => {
-        global._static[file.replace(/\.[^/.]+$/ , "")] = fs.readFileSync("src/static/"+file, {encoding: "utf-8"});
+        let name = file.replace(/\.[^/.]+$/ , "");
+        global._static[name] = fs.readFileSync("src/static/"+file, {encoding: "utf-8"});
+
+        Object.defineProperty(global._static, name, {
+            get: function() {
+                if (process.env.DEV_MODE === "ACTIVATED") {
+                    return fs.readFileSync("src/static"+file, {encoding: "utf-8"});
+                } else {
+                    return this[name];
+                }
+            }
+        });
     });
     global._static.app = fs.readFileSync("src/webapp/index.html", {encoding: "utf-8"});
     global._static.appbundle = fs.readFileSync("src/webapp/dist/bundle.js", {encoding: "utf-8"});
@@ -63,7 +91,7 @@ async function startServer() {
         } else if (req.query.code) {
             res.send(global._static.app);
         } else {
-            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=https://analyzeer.squared.codebrew.fr&perms=basic_access,listening_history`);
+            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global.__deezerapp.url}&perms=basic_access,listening_history`);
         }
     });
 
@@ -71,7 +99,7 @@ async function startServer() {
         res.send(global._static.appbundle);
     });
 
-    app.listen(9090);
+    app.listen(global._deezerapp.port);
 }
 
 // Helpers

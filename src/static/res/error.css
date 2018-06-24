@@ -1,0 +1,64 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    background-color: #23232c;
+    display: flex;
+}
+
+.wow {
+    visibility: hidden;
+}
+
+div#errorContainer, section#error {
+    margin: auto;
+    width: 97vw;
+    height: 97vh;
+    max-width: 700px;
+    max-height: 300px;
+}
+
+section#error {
+    position: absolute;
+    box-sizing: border-box;
+    padding: 2em;
+    border-radius: .3em;
+    background-color: white;
+    box-shadow: rgba(0,0,0,0.3) 2px 2px 20px;
+
+    font-family: 'Open Sans';
+}
+
+h1 {
+    font-size: 3em;
+    color: #32323d;
+    margin-top: 0px;
+}
+
+p {
+    font-size: 1.3em;
+    color: #72727d;
+}
+
+a {
+    text-decoration: none;
+    font-size: 1.3em;
+    padding: .3em .7em;
+    position: absolute;
+    bottom: 2em;
+    right: 2em;
+    border-radius: .1em;
+    color: white;
+    background-color: #00C7F2;
+    transition: all .4s ease-out;
+    cursor: pointer;
+}
+
+a:focus, a:hover, a:active {
+    background-color: #00D2FF;
+    box-shadow: rgba(0,0,0,0.3) 0px 0px 5px;
+}

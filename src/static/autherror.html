@@ -3,12 +3,24 @@
     <head>
         <meta charset="utf8" />
         <title>Authentication failure! - Analyzeer</title>
+
+        <link rel="stylesheet" href="res/error.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" integrity="sha384-OHBBOqpYHNsIqQy8hL1U+8OXf9hH6QRxi0+EODezv82DfnZoV7qoHAZDwMwEJvSw" crossorigin="anonymous" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js" integrity="sha384-V27yAyb3yYhZbiwaK9Sgxh9Cywkf/H2al4wcrcp/hKF9ZYT7d5saGJFoO/0v1Cgs" crossorigin="anonymous"></script>
     </head>
     <body>
-        <h1>Oops</h1>
-        <p>
-            Could not get authentication approval from Deezer.<br />
-            <a href="https://analyzeer.squared.codebrew.fr">Try again?</a>
-        </p>
+        <div id="errorContainer">
+            <section id="error" class="wow fadeIn">
+                <h1>Oops</h1>
+                <p>
+                    Could not get authentication approval from Deezer.
+                </p>
+                <a href="/">Try again?</a>
+            </section>
+        </div>
+        <script>
+            new WOW().init();
+        </script>
     </body>
 </html>

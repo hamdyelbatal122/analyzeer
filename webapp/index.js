@@ -21,7 +21,8 @@ socket.emit("apiconnect", code, res => {
 });
 
 function render(data) {
-    document.body.append(JSON.stringify(data));
+    window.root = document.getElementById("app-root");
+    window.root.append("test2");
 
     new WOW({live:false}).init();
 }

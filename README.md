@@ -29,4 +29,4 @@ Then `npm run build` and finally `npm start`. Make sure the port you defined is 
 ### Running in "dev mode" (live recompilation)
 (Only works on \*nix systems for now, requires bash)
 
-Follow the instructions in "Running locally" above, and use `npm run live` instead of build & start. The webapp's logic and all "static" files will be reloaded and recompiled automatically when changed on-disk.
+Follow the instructions in "Running locally" above, and use `npm run live` instead of build & start. The webapp's logic and all "static" files will be reloaded and recompiled automatically when changed on-disk. Also, in dev mode, a data sample is used instead of actually using Deezer's API.

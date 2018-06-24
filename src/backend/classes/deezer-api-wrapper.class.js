@@ -14,8 +14,12 @@ class DeezerAPIConnection {
                 },
                 json: true
             }).then(res => {
-                this.oauthCode = res.access_token;
-                resolve(this);
+                if (res !== "wrong code" && res.access_token) {
+                    this.oauthCode = res.access_token;
+                    resolve(this);
+                } else {
+                    throw(res);
+                }
             }).catch(e => {
                 reject(e);
             });

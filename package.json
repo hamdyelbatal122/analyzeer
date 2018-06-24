@@ -6,6 +6,7 @@
     "build": "npx webpack --config webpack.config.js",
     "start": "node src/backend/server.js",
     "deploy": "now && now alias",
+    "clean": "now rm analyzeer --safe --yes",
     "live-backend": "export DEV_MODE=\"ACTIVATED\" && npm run start",
     "live-webapp": "npx webpack -wd --config webpack.config.js",
     "live": "./devLiveReload.sh \"npm run live-backend\" \"npm run live-webapp\""
@@ -23,7 +24,9 @@
   "dependencies": {
     "express": "^4.16.3",
     "request": "^2.87.0",
-    "request-promise-native": "^1.0.5"
+    "request-promise-native": "^1.0.5",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

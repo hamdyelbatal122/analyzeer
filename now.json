@@ -2,7 +2,6 @@
     "name": "analyzeer",
     "alias": "analyzeer.squared.codebrew.fr",
     "env": {
-        "NODE_ENV": "production",
         "APP_SETTINGS": "@analyzeer-settings"
     }
 }

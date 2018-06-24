@@ -19,9 +19,11 @@ async function parseSettings() {
 async function loadStatics() {
     let fs = require("fs");
     global._static = {};
-    fs.readdirSync("./static").forEach(file => {
-        global._static[file.replace(/\.[^/.]+$/ , "")] = fs.readFileSync("./static/"+file, {encoding: "utf-8"});
+    fs.readdirSync("src/static").forEach(file => {
+        global._static[file.replace(/\.[^/.]+$/ , "")] = fs.readFileSync("src/static/"+file, {encoding: "utf-8"});
     });
+    global._static.app = fs.readFileSync("src/webapp/index.html", {encoding: "utf-8"});
+    global._static.appbundle = fs.readFileSync("src/webapp/dist/bundle.js", {encoding: "utf-8"});
 }
 
 async function harvestAPI(code) {
@@ -48,14 +50,6 @@ async function harvestAPI(code) {
     });
 }
 
-async function buildReport(data) {
-    return data;
-}
-
-async function renderHTML(report) {
-    return JSON.stringify(report);
-}
-
 async function startServer() {
     await loadStatics();
 
@@ -67,18 +61,14 @@ async function startServer() {
         if (req.query.error_reason) {
             res.send(global._static.autherror);
         } else if (req.query.code) {
-            harvestAPI(req.query.code).then(data => {
-                return buildReport(data);
-            }).then(report => {
-                return renderHTML(report);
-            }).then(html => {
-                res.send(html);
-            }).catch(e => {
-                res.status(500).send(global._static.internerror);
-            });
+            res.send(global._static.app);
         } else {
             res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=https://analyzeer.squared.codebrew.fr&perms=basic_access,listening_history`);
         }
+    });
+
+    app.get("/bundle.js", (req, res) => {
+        res.send(global._static.appbundle);
     });
 
     app.listen(9090);

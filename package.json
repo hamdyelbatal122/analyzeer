@@ -2,9 +2,9 @@
   "name": "analyzeer",
   "version": "1.0.0",
   "description": "Analyzeer compiles data from your Deezer profile to give you an overview of your listening habits and trends.",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "build": "npx webpack --config webpack.config.js",
+    "start": "node src/backend/server.js",
     "deploy": "now && now alias"
   },
   "repository": {
@@ -23,6 +23,11 @@
     "request-promise-native": "^1.0.5"
   },
   "devDependencies": {
-    "now-env": "^3.1.0"
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.4",
+    "babel-preset-env": "^1.7.0",
+    "now-env": "^3.1.0",
+    "webpack": "^4.12.1",
+    "webpack-cli": "^3.0.8"
   }
 }

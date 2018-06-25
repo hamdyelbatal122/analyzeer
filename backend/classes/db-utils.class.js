@@ -32,10 +32,10 @@ class DbUtils {
         return new Promise((resolve, reject) => {
             this._pool.getConnection((err, conn) => {
                 if (err) reject(err);
-                conn.query("INSERT INTO `users` (`id`, `name`, `email`, `token`, `public`) VALUES (?, ?, ?, ?, ?)", [usr.id, usr.name || "Anonymous", usr.email || null, token, isPublic], (err, result) => {
+                conn.query("INSERT INTO `users` (`id`, `name`, `email`, `token`, `public`) VALUES (?, ?, ?, ?, ?)", [usr.id, usr.name || "Anonymous", (usr.email || null), token, isPublic], (err, result) => {
                     conn.release();
                     if (err) reject(err);
-                    resolve(result.insertId);
+                    resolve();
                 });
             });
         });

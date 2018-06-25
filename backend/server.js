@@ -119,9 +119,9 @@ async function startServer() {
             api.getOauthToken(global._deezerapp, req.query.code).then(() => {
                 api.getUserInfo().then(u => {
                     let isPublic = req.params.conf === "public" ? true : false;
-                    db.createUser(u, api.oauthcode, isPublic).then(() => {
+                    db.createUser(u, api.oauthCode, isPublic).then(() => {
                         res.status(201).send(global._static.registersuccess);
-                    }).catch(() => {
+                    }).catch(e => {
                         res.redirect(302, "/500");
                     });
                 }).catch(() => {

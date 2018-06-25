@@ -12,8 +12,70 @@ html, body, main#app-root {
 main#app-root {
     background-color: #23232c;
     font-family: 'Open Sans';
+
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-areas: "user user info info credits"
+                         "graph1 graph1 info2 info2 stat1"
+                         "graph1 graph1 info3 stat2 stat1"
+                         "stat3 graph2 graph2 stat2 info4";
+    grid-gap: 2em;
+    padding: 2em;
+    box-sizing: border-box;
 }
 
 main#app-root.loading {
     display: flex;
+}
+
+main#app-root > section {
+    box-sizing: border-box;
+    padding: 2em;
+    border-radius: .3em;
+    background-color: white;
+    box-shadow: rgba(0,0,0,0.3) 2px 2px 20px;
+    color: #32323d;
+}
+
+section#user {
+    grid-area: user;
+    display: grid;
+    grid-template-columns: 12em 1.8fr .6fr;
+    grid-template-rows: 5em 5em;
+    grid-template-areas: "img name link"
+                         "img age link";
+}
+
+section#user img {
+    grid-area: img;
+    height: 10em;
+    border-radius: 100%;
+}
+
+section#user h1 {
+    grid-area: name;
+    margin: 0px;
+    justify-self: flex-start;
+    align-self: flex-end;
+    font-size: 2.5rem;
+}
+section#user h1 span {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: #72727d;
+    vertical-align: middle;
+}
+
+section#user h3 {
+    grid-area: age;
+    margin: 0px;
+    margin-top: .5em;
+    justify-self: flex-start;
+    align-self: flex-start;
+    font-weight: normal;
+}
+
+section#user a {
+    grid-area: link;
 }

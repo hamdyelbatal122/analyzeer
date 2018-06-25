@@ -22,7 +22,16 @@ socket.emit("apiconnect", code, res => {
 
 function render(data) {
     window.root = document.getElementById("app-root");
-    window.root.append("test2");
+
+    document.getElementsByClassName("sk-wave")[0].remove();
+    window.root.removeAttribute("class");
+    window.root.innerHTML += `
+    <section id="user" class="wow fadeInUp">
+        <img src="${data.user.picture_medium}" alt="${data.user.name}'s photo'" />
+        <h1>${data.user.name} <span>#${data.user.id}</span></h1>
+        <h3>On Deezer since ${data.user.inscription_date}</h3>
+        <a href="${data.user.link}" target="_blank">View profile on Deezer</a>
+    </section>`;
 
     new WOW({live:false}).init();
 }

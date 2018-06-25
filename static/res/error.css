@@ -33,6 +33,12 @@ section#error {
     font-family: 'Open Sans';
 }
 
+@media only all and (max-width: 500px) {
+    section#error {
+        max-height: 70vh;
+    }
+}
+
 h1 {
     font-size: 3em;
     color: #32323d;

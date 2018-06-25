@@ -49,6 +49,36 @@ function render(data) {
         <h1>${data.user.name} <span>#${data.user.id}</span></h1>
         <h3>On Deezer since ${data.user.inscription_date}</h3>
         <a href="${data.user.link}" target="_blank">View on Deezer</a>
+    </section>
+    <section id="account" class="wow fadeInUp yellow">
+        <h1>Analyzeer account</h1>
+    </section>
+    <section id="credits" class="wow fadeInUp dark">
+        <h1>Credits</h1>
+    </section>
+    <section id="graph1" class="wow fadeInUp blue">
+        <h1>Graph1</h1>
+    </section>
+    <section id="info1" class="wow fadeInUp">
+        <h1>Info1</h1>
+    </section>
+    <section id="stat1" class="wow fadeInUp pink">
+        <h1>Stat1</h1>
+    </section>
+    <section id="info2" class="wow fadeInUp">
+        <h1>Info2</h1>
+    </section>
+    <section id="stat2" class="wow fadeInUp pink">
+        <h1>Stat2</h1>
+    </section>
+    <section id="stat3" class="wow fadeInUp pink">
+        <h1>Stat3</h1>
+    </section>
+    <section id="graph2" class="wow fadeInUp blue">
+        <h1>Graph2</h1>
+    </section>
+    <section id="info3" class="wow fadeInUp">
+        <h1>Info3</h1>
     </section>`;
 
     new WOW({live:false}).init();

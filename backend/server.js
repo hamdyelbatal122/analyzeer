@@ -126,10 +126,10 @@ async function startServer() {
                     });
                 }).catch(() => {
                     res.redirect(302, "/500");
-                })
+                });
             }).catch(() => {
                 res.send(global._static.autherror);
-            })
+            });
         } else {
             let conf = "/private";
             if (req.params.conf === "public") {

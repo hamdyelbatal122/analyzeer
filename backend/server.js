@@ -104,11 +104,42 @@ async function startServer() {
         } else if (req.query.code || process.env.DEV_MODE === "ACTIVATED") {
             res.send(global._static.app);
         } else {
-            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global._settings.url}&perms=basic_access,listening_history,offline_access`);
+            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global._settings.url}&perms=basic_access,listening_history`);
+        }
+    });
+    app.get("/register(/:conf?)", (req, res) => {
+        if (process.env.DEV_MODE === "ACTIVATED") {
+            res.status(418).send("Register endpoint not accessible in dev mode.");
+            return false;
+        }
+        if (req.query.error_reason) {
+            res.send(global._static.autherror);
+        } else if (req.query.code && (req.params.conf === "public" || req.params.conf === "private")) {
+            let api = new DeezerAPIConnection();
+            api.getOauthToken(global._deezerapp, req.query.code).then(() => {
+                api.getUserInfo().then(u => {
+                    let isPublic = req.params.conf === "public" ? true : false;
+                    db.createUser(u, api.oauthcode, isPublic).then(() => {
+                        res.status(201).send(global._static.registersuccess);
+                    }).catch(() => {
+                        res.redirect(302, "/500");
+                    });
+                }).catch(() => {
+                    res.redirect(302, "/500");
+                })
+            }).catch(() => {
+                res.send(global._static.autherror);
+            })
+        } else {
+            let conf = "/private";
+            if (req.params.conf === "public") {
+                conf = "/public";
+            }
+            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global._settings.url}/register${conf}&perms=basic_access,email,offline_access,listening_history`);
         }
     });
 
-    app.get("/bundle.js", (req, res) => {
+    app.get("/app/bundle.js", (req, res) => {
         res.send(global._static.appbundle);
     });
     app.get("/res/:file", (req, res ) => {
@@ -123,19 +154,54 @@ async function startServer() {
     app.get("/500", (req, res) => {
         res.send(global._static.internerror);
     });
+    app.get("/403", (req, res) => {
+        res.send(global._static.privateerror);
+    });
+    app.get("/404", (req, res) => {
+        res.send(global._static.notfounderror);
+    });
+
+    app.get("/:user", (req, res) => {
+        if (req.query.code) {
+            res.redirect(302, `/?code=${req.query.code}`);
+        } else {
+            res.send(global._static.app);
+        }
+    });
 
     io.on("connection", socket => {
         let api = new DeezerAPIConnection();
-        socket.once("apiconnect", (code, res) => {
-            if (process.env.DEV_MODE === "ACTIVATED") {
-                res("200 OK");
-            } else {
-                api.getOauthToken(global._deezerapp, code).then(() => {
-                    res("200 OK");
-                }).catch(e => {
+        socket.once("apiconnect", (identifier, res) => {
+            db.findUser(identifier).then(u => {
+                if (u.public === 1) {
+                    api.setOauthToken(u.token);
+                    res("200 CONNECTED");
+                } else {
+                    res("403 UNAUTHORIZED");
+                }
+            }).catch(e => {
+                if (e === "Not found") {
+                    if (process.env.DEV_MODE === "ACTIVATED") {
+                        res("200 OK");
+                        return true;
+                    }
+                    api.getOauthToken(global._deezerapp, identifier).then(() => {
+                        api.getUserInfo().then(du => {
+                            db.findUser(du.id).then(u => {
+                                res("200 IDENTIFIED");
+                            }).catch(e => {
+                                res("200 OK");
+                            });
+                        }).catch(e => {
+                            res(e);
+                        });
+                    }).catch(e => {
+                        res("404 NOT FOUND");
+                    });
+                } else {
                     res(e);
-                });
-            }
+                }
+            });
         });
         socket.on("data request", res => {
             harvestAPI(api).then(data => {

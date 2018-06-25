@@ -21,6 +21,7 @@ socket.emit("apiconnect", code, res => {
 });
 
 function render(data) {
+    window.deezerRawData = data;
     window.root = document.getElementById("app-root");
 
     document.getElementsByClassName("sk-wave")[0].remove();
@@ -30,7 +31,7 @@ function render(data) {
         <img src="${data.user.picture_medium}" alt="${data.user.name}'s photo'" />
         <h1>${data.user.name} <span>#${data.user.id}</span></h1>
         <h3>On Deezer since ${data.user.inscription_date}</h3>
-        <a href="${data.user.link}" target="_blank">View profile on Deezer</a>
+        <a href="${data.user.link}" target="_blank">View on Deezer</a>
     </section>`;
 
     new WOW({live:false}).init();

@@ -2,7 +2,7 @@ class DeezerAPIConnection {
     constructor() {
         this._req = require("request-promise-native");
     }
-    connect(app, code) {
+    getOauthToken(app, code) {
         return new Promise((resolve, reject) => {
             this._req({
                 uri: "https://connect.deezer.com/oauth/access_token.php",
@@ -83,7 +83,26 @@ class DeezerAPIConnection {
                 },
                 json: true
             }).then(res => {
-                resolve(res);
+                if (res.next) {
+                    this._req({
+                        uri: "https://api.deezer.com/user/me/history",
+                        qs: {
+                            access_token: this.oauthCode,
+                            limit: 100,
+                            offset: 50
+                        },
+                        json: true
+                    }).then(resb => {
+                        resb.data.forEach(t => {
+                            res.data.push(t);
+                        });
+                        resolve(res);
+                    }).catch(e => {
+                        reject(e);
+                    });
+                } else {
+                    resolve(res);
+                }
             }).catch(e => {
                 reject(e);
             });

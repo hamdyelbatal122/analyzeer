@@ -9,13 +9,12 @@ parseSettings().then(startServer);
 // Main functions
 
 async function parseSettings() {
-    let json = JSON.parse(process.env.APP_SETTINGS);
+    let json = JSON.parse(process.env.APP_SETTINGS.replace(/\n/g, "\\n"));
     global._deezerapp = {
         id: json.appid,
-        secret: json.secret_key,
-        url: json.url,
-        port: json.port
+        secret: json.secret_key
     };
+    global._settings = json;
 }
 
 async function loadStatics() {
@@ -86,6 +85,12 @@ async function harvestAPI(api) {
 }
 
 async function startServer() {
+    const {DbUtils} = require("./classes/db-utils.class.js");
+    const db = new DbUtils(global._settings.db);
+
+    await db.testDBConnection().catch(e => {console.log(e);process.abort()});
+    console.log(`Connected to ${global._settings.db.database} database at ${global._settings.db.host}`);
+
     await loadStatics();
 
     const {DeezerAPIConnection} = require("./classes/deezer-api-wrapper.class.js");
@@ -99,7 +104,7 @@ async function startServer() {
         } else if (req.query.code || process.env.DEV_MODE === "ACTIVATED") {
             res.send(global._static.app);
         } else {
-            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global._deezerapp.url}&perms=basic_access,listening_history,offline_access`);
+            res.redirect(302, `https://connect.deezer.com/oauth/auth.php?app_id=${global._deezerapp.id}&redirect_uri=${global._settings.url}&perms=basic_access,listening_history,offline_access`);
         }
     });
 
@@ -125,7 +130,7 @@ async function startServer() {
             if (process.env.DEV_MODE === "ACTIVATED") {
                 res("200 OK");
             } else {
-                api.connect(global._deezerapp, code).then(() => {
+                api.getOauthToken(global._deezerapp, code).then(() => {
                     res("200 OK");
                 }).catch(e => {
                     res(e);
@@ -141,8 +146,8 @@ async function startServer() {
         });
     });
 
-    http.listen(global._deezerapp.port, () => {
-        console.log(`Listening @ ${global._deezerapp.url}:${global._deezerapp.port}`);
+    http.listen(global._settings.port, () => {
+        console.log(`Listening @ ${global._settings.url}:${global._settings.port}`);
     });
 }
 

@@ -9,6 +9,23 @@ html, body, main#app-root {
     visibility: hidden;
 }
 
+a {
+    text-decoration: none;
+    font-size: 1.3em;
+    text-align: center;
+    padding: .3em .7em;
+    border-radius: .1em;
+    color: white;
+    background-color: #00C7F2;
+    transition: all .4s ease-out;
+    cursor: pointer;
+}
+
+a:focus, a:hover, a:active {
+    background-color: #00D2FF;
+    box-shadow: rgba(0,0,0,0.3) 0px 0px 5px;
+}
+
 main#app-root {
     background-color: #23232c;
     font-family: 'Open Sans';
@@ -41,10 +58,10 @@ main#app-root > section {
 section#user {
     grid-area: user;
     display: grid;
-    grid-template-columns: 12em 1.8fr .6fr;
+    grid-template-columns: 12em 1.5fr .9fr;
     grid-template-rows: 5em 5em;
     grid-template-areas: "img name link"
-                         "img age link";
+                         "img info info";
 }
 
 section#user img {
@@ -59,6 +76,7 @@ section#user h1 {
     justify-self: flex-start;
     align-self: flex-end;
     font-size: 2.5rem;
+    white-space: nowrap;
 }
 section#user h1 span {
     font-size: 1.2rem;
@@ -68,7 +86,7 @@ section#user h1 span {
 }
 
 section#user h3 {
-    grid-area: age;
+    grid-area: info;
     margin: 0px;
     margin-top: .5em;
     justify-self: flex-start;
@@ -78,4 +96,9 @@ section#user h3 {
 
 section#user a {
     grid-area: link;
+    justify-self: center;
+    align-self: flex-end;
+    font-size: 1rem;
+    white-space: nowrap;
+    margin-bottom: .5rem;
 }

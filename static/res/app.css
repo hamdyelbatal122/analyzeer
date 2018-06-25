@@ -33,10 +33,10 @@ main#app-root {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     grid-template-rows: repeat(4, 1fr);
-    grid-template-areas: "user user info info credits"
-                         "graph1 graph1 info2 info2 stat1"
-                         "graph1 graph1 info3 stat2 stat1"
-                         "stat3 graph2 graph2 stat2 info4";
+    grid-template-areas: "user user account account credits"
+                         "info1 graph1 graph1 stat1 stat1"
+                         "stat2 graph1 graph1 info2 stat3"
+                         "stat2 info3 graph2 graph2 stat3";
     grid-gap: 2em;
     padding: 2em;
     box-sizing: border-box;
@@ -53,6 +53,23 @@ main#app-root > section {
     background-color: white;
     box-shadow: rgba(0,0,0,0.3) 2px 2px 20px;
     color: #32323d;
+}
+
+main#app-root > section.dark {
+    background-color: #171717;
+    color: #F7F7F7;
+}
+main#app-root > section.yellow {
+    background-color: #FEEB15;
+    color: #171717;
+}
+main#app-root > section.pink {
+    background-color: #E72D63;
+    color: #F7F7F7;
+}
+main#app-root > section.blue {
+    background-color: #02B5C8;
+    color: #F7F7F7;
 }
 
 section#user {
@@ -101,4 +118,44 @@ section#user a {
     font-size: 1rem;
     white-space: nowrap;
     margin-bottom: .5rem;
+}
+
+section#account {
+    grid-area: account;
+}
+
+section#credits {
+    grid-area: credits;
+}
+
+section#graph1 {
+    grid-area: graph1;
+}
+
+section#info1 {
+    grid-area: info1;
+}
+
+section#stat1 {
+    grid-area: stat1;
+}
+
+section#info2 {
+    grid-area: info2;
+}
+
+section#stat2 {
+    grid-area: stat2;
+}
+
+section#stat3 {
+    grid-area: stat3;
+}
+
+section#graph2 {
+    grid-area: graph2;
+}
+
+section#info3 {
+    grid-area: info3;
 }

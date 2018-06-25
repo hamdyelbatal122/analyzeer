@@ -3,11 +3,11 @@
  */
 
  /* Customize wave spinner with deezer's color for fancyness */
- div.sk-rect1 {background-color: #FF0000;}
- div.sk-rect2 {background-color: #FFED00;}
- div.sk-rect3 {background-color: #FF0092;}
- div.sk-rect4 {background-color: #C2FF00;}
- div.sk-rect5 {background-color: #00C7F2;}
+ div.sk-rect1 {background-color: #E3231D;}
+ div.sk-rect2 {background-color: #FEDD00;}
+ div.sk-rect3 {background-color: #D72C88;}
+ div.sk-rect4 {background-color: #C3D200;}
+ div.sk-rect5 {background-color: #40B4E6;}
 
  .sk-wave {
    margin: auto;

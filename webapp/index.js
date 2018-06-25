@@ -4,6 +4,10 @@ import {WOW} from "wowjs";
 const socket = io();
 const identifier = window.location.search.slice(6) || window.location.pathname.slice(1);
 
+if (window.history.replaceState) {
+    window.history.replaceState("", "Analyzeer", window.location.origin);
+}
+
 socket.emit("apiconnect", identifier, res => {
     if (res.startsWith("200")) {
         window.isRegistered = (res === "200 CONNECTED") ? true : false;

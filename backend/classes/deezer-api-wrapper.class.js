@@ -25,6 +25,9 @@ class DeezerAPIConnection {
             });
         });
     }
+    setOauthToken(token) {
+        this.oauthCode = token;
+    }
     getUserInfo() {
         return new Promise((resolve, reject) => {
             this._req({

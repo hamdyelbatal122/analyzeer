@@ -22,47 +22,69 @@ async function loadStatics() {
     global._static = {
         get app() {
             if (process.env.DEV_MODE === "ACTIVATED") {
-                return fs.readFileSync("./webapp/index.html");
+                return fs.readFileSync("./webapp/index.html", {encoding:"utf-8"});
             } else {
                 return this._app;
             }
         },
         get appbundle() {
             if (process.env.DEV_MODE === "ACTIVATED") {
-                return fs.readFileSync("./webapp/dist/bundle.js");
+                return fs.readFileSync("./webapp/dist/bundle.js", {encoding:"utf-8"});
             } else {
                 return this._appbundle;
             }
         }
     };
     fs.readdirSync("./static").forEach(file => {
+        let encoding;
+        switch(file.split('.').pop()) {
+            case "html":
+            case "js":
+            case "css":
+                encoding = "utf-8";
+                break;
+            default:
+                encoding = null;
+        }
+
         let name = file.replace(/\.[^/.]+$/ , "");
         if (file === name) return false; // Prevent trying to read directories
-        global._static["_"+name] = fs.readFileSync("./static/"+file);
+        global._static["_"+name] = fs.readFileSync("./static/"+file, {encoding});
 
         Object.defineProperty(global._static, name, {
             get: function() {
                 if (process.env.DEV_MODE === "ACTIVATED") {
-                    return fs.readFileSync("./static/"+file);
+                    return fs.readFileSync("./static/"+file, {encoding});
                 } else {
                     return this["_"+name];
                 }
             }
         });
     });
-    global._static._app = fs.readFileSync("./webapp/index.html");
-    global._static._appbundle = fs.readFileSync("./webapp/dist/bundle.js");
+    global._static._app = fs.readFileSync("./webapp/index.html", {encoding:"utf-8"});
+    global._static._appbundle = fs.readFileSync("./webapp/dist/bundle.js", {encoding:"utf-8"});
 
     global._static.res = {};
     fs.readdirSync("./static/res").forEach(file => {
+        let encoding;
+        switch(file.split('.').pop()) {
+            case "html":
+            case "js":
+            case "css":
+                encoding = "utf-8";
+                break;
+            default:
+                encoding = null;
+        }
+
         let name = file.replace(/\.[^/.]+$/ , "");
         if (file === name) return false; // Prevent trying to read directories
-        global._static.res["_"+name] = fs.readFileSync("./static/res/"+file);
+        global._static.res["_"+name] = fs.readFileSync("./static/res/"+file, {encoding});
 
         Object.defineProperty(global._static.res, name, {
             get: function() {
                 if (process.env.DEV_MODE === "ACTIVATED") {
-                    return fs.readFileSync("./static/res/"+file);
+                    return fs.readFileSync("./static/res/"+file, {encoding});
                 } else {
                     return this["_"+name];
                 }
@@ -175,22 +197,40 @@ async function startServer() {
             db.findUser(identifier).then(u => {
                 if (u.public === 1) {
                     api.setOauthToken(u.token);
-                    res("200 CONNECTED");
+                    res({
+                        status: 1,
+                        statusString: "Viewing public page",
+                        id: u.id,
+                        name: u.name,
+                        public: u.public
+                    });
                 } else {
                     res("403 UNAUTHORIZED");
                 }
             }).catch(e => {
                 if (e === "Not found") {
                     if (process.env.DEV_MODE === "ACTIVATED") {
-                        res("200 OK");
+                        res({
+                            status: 0,
+                            statusString: "Not linked"
+                        });
                         return true;
                     }
                     api.getOauthToken(global._deezerapp, identifier).then(() => {
                         api.getUserInfo().then(du => {
                             db.findUser(du.id).then(u => {
-                                res("200 IDENTIFIED");
+                                res({
+                                    status: 2,
+                                    statusString: "Connected",
+                                    id: u.id,
+                                    name: u.name,
+                                    public: u.public
+                                });
                             }).catch(e => {
-                                res("200 OK");
+                                res({
+                                    status: 0,
+                                    statusString: "Not linked"
+                                });
                             });
                         }).catch(e => {
                             res(e);

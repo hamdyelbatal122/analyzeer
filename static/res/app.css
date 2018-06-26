@@ -10,7 +10,13 @@ html, body, main#app-root {
 }
 
 a {
+    font-weight: bold;
     text-decoration: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+a.button {
     font-size: 1.3em;
     text-align: center;
     padding: .3em .7em;
@@ -18,10 +24,13 @@ a {
     color: white;
     background-color: #00C7F2;
     transition: all .4s ease-out;
-    cursor: pointer;
 }
 
 a:focus, a:hover, a:active {
+    text-decoration: underline;
+}
+
+a.button:focus, a.button:hover, a.button:active {
     background-color: #00D2FF;
     box-shadow: rgba(0,0,0,0.3) 0px 0px 5px;
 }
@@ -50,6 +59,7 @@ main#app-root.loading {
 main#app-root > section {
     box-sizing: border-box;
     padding: 2em;
+    align-content: center;
     /* border-radius: .3em; */
     background-color: white;
     box-shadow: rgba(0,0,0,0.3) 2px 2px 20px;
@@ -127,6 +137,16 @@ section#account {
 
 section#credits {
     grid-area: credits;
+}
+
+section#credits p, section#credits h1 {
+    float: left;
+}
+
+section#credits img {
+    float: right;
+    height: 15vh;
+    padding-top: 5vh;
 }
 
 section#graph1 {

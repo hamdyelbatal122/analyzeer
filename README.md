@@ -10,7 +10,18 @@ First, create [a new Deezer application](https://developers.deezer.com/myapps). 
 To deploy this app in production using [Now](https://zeit.co/now), set a [secret](https://zeit.co/docs/getting-started/secrets) named `analyzeer-settings` containing the following:
 
 ```json
-{"appid": 123456,"secret_key": "your deezer app secret key","url": "the base url for the app, including https://","port": 9090}
+{
+    "appid": 123456,
+    "secret_key": "your deezer app secret key",
+    "url": "the base url for the app, including https://",
+    "port": 9090,
+    "db": {
+        "host": "SQL database host",
+        "user": "SQL database user",
+        "password": "password for that user",
+        "database": "which database to use"
+    }
+}
 ```
 
 Then, run `now GitSquared/analyzeer`. See [Now's documentation on deploying git repos](https://zeit.co/docs/features/repositories) for more info on this command.

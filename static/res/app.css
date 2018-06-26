@@ -40,6 +40,7 @@ main#app-root {
     grid-gap: 2em;
     padding: 2em;
     box-sizing: border-box;
+    overflow: hidden;
 }
 
 main#app-root.loading {
@@ -49,7 +50,7 @@ main#app-root.loading {
 main#app-root > section {
     box-sizing: border-box;
     padding: 2em;
-    border-radius: .3em;
+    /* border-radius: .3em; */
     background-color: white;
     box-shadow: rgba(0,0,0,0.3) 2px 2px 20px;
     color: #32323d;

@@ -1,7 +1,7 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./webapp/index.js",
+    entry: ["babel-polyfill", "./webapp/index.js"],
     mode: "production",
     module: {
         rules: [

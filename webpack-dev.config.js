@@ -2,7 +2,7 @@ const path = require("path");
 const LiveReloadPlugin = require('webpack-livereload-plugin');
 
 module.exports = {
-    entry: "./webapp/index.js",
+    entry: ["babel-polyfill", "./webapp/index.js"],
     mode: "development",
     module: {
         rules: [

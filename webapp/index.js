@@ -1,3 +1,5 @@
+import "babel-polyfill";
+
 import io from "socket.io-client";
 import {WOW} from "wowjs";
 
@@ -17,7 +19,12 @@ socket.emit("apiconnect", identifier, res => {
                 socket.disconnect();
                 window.location.assign("/500");
             } else {
-                render(res);
+                process(res).then(d => {
+                    render(d);
+                }).catch(e => {
+                    socket.disconnect();
+                    window.location.assign("/500");
+                });
             }
         });
     } else if (res === "403 UNAUTHORIZED") {
@@ -31,6 +38,20 @@ socket.emit("apiconnect", identifier, res => {
         window.location.assign("/500");
     }
 });
+
+async function process(data) {
+    switch(data.user.status) {
+        case 2:
+            data.user.statusString = "Premium+";
+            break;
+        case 1:
+            data.user.statusString = "Premium";
+            break;
+        default:
+            data.user.statusString = "Free";
+    }
+    return data;
+}
 
 function render(data) {
     window.deezerRawData = data;
@@ -47,14 +68,21 @@ function render(data) {
     <section id="user" class="wow fadeInLeft">
         <img src="${data.user.picture_medium}" alt="${data.user.name}'s photo'" />
         <h1>${data.user.name} <span>#${data.user.id}</span></h1>
-        <h3>On Deezer since ${data.user.inscription_date}</h3>
-        <a href="${data.user.link}" target="_blank">View on Deezer</a>
+        <h3>On Deezer since ${data.user.inscription_date} - From ${data.user.country}!<br/>
+            Subscription: ${data.user.status} (${data.user.statusString}).</h3>
+        <a class="button" href="${data.user.link}" target="_blank">View on Deezer</a>
     </section>
     <section id="account" class="wow fadeInDown yellow" data-wow-delay="300ms">
         <h1>Analyzeer account</h1>
     </section>
     <section id="credits" class="wow fadeInRight dark" data-wow-delay="600ms">
         <h1>Credits</h1>
+        <img src="res/deezer.png" alt="Deezer logo"/>
+        <p>Made with ♥ by <a href="https://squared.codebrew.fr" target="_blank">Squared</a><br/>
+            Using <a href="https://deezer.com/" target="_blank">Deezer</a>'s API<br/>
+            Source hosted <a href="https://github.com/GitSquared/analyzeer" target="_blank">on GitHub</a><br/>
+            App deployed on <a href="https://zeit.co/now" target="_blank">Now</a>
+        </p>
     </section>
     <section id="info1" class="wow fadeInLeft" data-wow-delay="950ms">
         <h1>Info1</h1>

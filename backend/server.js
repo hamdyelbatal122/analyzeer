@@ -202,7 +202,7 @@ async function startServer() {
                         statusString: "Viewing public page",
                         id: u.id,
                         name: u.name,
-                        public: u.public
+                        public: (u.public === 1) ? true : false
                     });
                 } else {
                     res("403 UNAUTHORIZED");
@@ -211,20 +211,35 @@ async function startServer() {
                 if (e === "Not found") {
                     if (process.env.DEV_MODE === "ACTIVATED") {
                         res({
-                            status: 0,
-                            statusString: "Not linked"
+                            status: 2,
+                            statusString: "Connected",
+                            id: 1234567,
+                            name: "DevMode",
+                            public: true,
+                            emails: false
                         });
                         return true;
                     }
                     api.getOauthToken(global._deezerapp, identifier).then(() => {
                         api.getUserInfo().then(du => {
                             db.findUser(du.id).then(u => {
+                                if (du.name !== u.name || du.email !== u.email) {
+                                    db.updateUser({
+                                        id: du.id,
+                                        name: du.name,
+                                        email: du.email || u.email
+                                    }).catch(e => {
+                                        // Fail silently
+                                    });
+                                }
                                 res({
                                     status: 2,
                                     statusString: "Connected",
                                     id: u.id,
-                                    name: u.name,
-                                    public: u.public
+                                    name: du.name,
+                                    email: du.email || u.email,
+                                    public: (u.public === 1) ? true : false,
+                                    emails: (u.emails === 1) ? true : false
                                 });
                             }).catch(e => {
                                 res({
@@ -248,6 +263,17 @@ async function startServer() {
                 res(data);
             }).catch(e => {
                 res("Error");
+            });
+        });
+        socket.on("update user", (usr, res) => {
+            db.updateUser(usr).then(() => {
+                res("200 OK");
+            }).catch(e => {
+                if (e === "Nothing changed") {
+                    res("400 NO UPDATE");
+                } else {
+                    res(e);
+                }
             });
         });
     });

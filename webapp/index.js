@@ -143,7 +143,7 @@ function renderAccountSection(data) {
         case 2:
             if (window.analyzeer.public === true) {
                 document.getElementById("account").innerHTML += `
-                <p>Use this link to share your statistics: <a class="button" href="/${data.user.id}" target="_blank">${window.location.host}/${data.user.id}</a> | <a href="#" onclick="window.ncopy('${window.location.host}/${data.user.id}');event.target.innerText = 'Copied!'; return false;">Copy</a>
+                <p>Use this link to share your statistics:<br/><a class="button" href="/${data.user.id}" target="_blank">${window.location.host}/${data.user.id}</a> | <a href="#" onclick="window.ncopy('${window.location.host}/${data.user.id}');event.target.innerText = 'Copied!'; return false;">Copy</a>
                 </p>`;
             } else {
                 document.getElementById("account").innerHTML += `
@@ -179,6 +179,8 @@ function renderAccountSection(data) {
                     socket.emit("update user", window.analyzeer, res => {
                         if (res !== "200 OK") {
                             typeCheck.checked = false;
+                        } else {
+                            renderAccountSection(window.deezerRawData);
                         }
                     });
                 } else {
@@ -186,16 +188,20 @@ function renderAccountSection(data) {
                     socket.emit("update user", window.analyzeer, res => {
                         if (res !== "200 OK") {
                             typeCheck.checked = true;
+                        } else {
+                            renderAccountSection(window.deezerRawData);
                         }
                     });
                 }
             };
             mailCheck.onchange = () => {
-                if (typeCheck.checked) {
+                if (mailCheck.checked) {
                     window.analyzeer.emails = true;
                     socket.emit("update user", window.analyzeer, res => {
                         if (res !== "200 OK") {
                             mailCheck.checked = false;
+                        } else {
+                            renderAccountSection(window.deezerRawData);
                         }
                     });
                 } else {
@@ -203,6 +209,8 @@ function renderAccountSection(data) {
                     socket.emit("update user", window.analyzeer, res => {
                         if (res !== "200 OK") {
                             mailCheck.checked = true;
+                        } else {
+                            renderAccountSection(window.deezerRawData);
                         }
                     });
                 }

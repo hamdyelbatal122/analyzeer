@@ -49,7 +49,6 @@ class DbUtils {
                 conn.query("UPDATE users SET `name` = ?, `email` = ?, `public` = ?, `emails` = ? WHERE `id` = ?", [usr.name, usr.email, isPublic, emails, usr.id], (err, result) => {
                     conn.release();
                     if (err) return reject(err);
-                    console.log(err);
                     if (result.changedRows === 1) {
                         resolve();
                     } else {

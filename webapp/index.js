@@ -8,7 +8,7 @@ window.ncopy = copy;
 const socket = io();
 const identifier = window.location.search.slice(6) || window.location.pathname.slice(1);
 
-if (window.history.replaceState) {
+if (window.history.replaceState && window.location.pathname === "/") {
     window.history.replaceState("", "Analyzeer", window.location.origin);
 }
 

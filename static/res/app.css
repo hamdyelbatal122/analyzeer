@@ -15,24 +15,29 @@ a {
     cursor: pointer;
     color: inherit;
 }
-
 a.button {
-    font-size: 1.3em;
+    font-size: 1.3rem;
     text-align: center;
-    padding: .3em .7em;
-    border-radius: .1em;
-    color: white;
-    background-color: #00C7F2;
+    padding: .3rem .7rem;
+    border-radius: .1rem;
+    color: #171717;
+    background-color: #F7F7F7;
     transition: all .4s ease-out;
+}
+p > a.button {
+    font-size: inherit;
+    padding: 0px .5rem;
 }
 
 a:focus, a:hover, a:active {
     text-decoration: underline;
 }
-
 a.button:focus, a.button:hover, a.button:active {
-    background-color: #00D2FF;
-    box-shadow: rgba(0,0,0,0.3) 0px 0px 5px;
+    text-decoration: none;
+    background-color: white;
+}
+p > a.button:focus, p > a.button:hover, p > a.button:active {
+    text-decoration: underline;
 }
 
 main#app-root {
@@ -53,7 +58,11 @@ main#app-root {
 }
 
 main#app-root.loading {
+    color: #F7F7F7;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 main#app-root > section {
@@ -61,25 +70,59 @@ main#app-root > section {
     padding: 2em;
     align-content: center;
     /* border-radius: .3em; */
-    background-color: white;
     box-shadow: rgba(0,0,0,0.3) 2px 2px 20px;
-    color: #32323d;
 }
 
+main#app-root > section > h1 {
+    margin-top: 0px;
+}
+
+main#app-root > section.white {
+    background: white;
+    color: #32323d;
+}
+main#app-root > section.white > *::-moz-selection {
+    background: #171717;
+    color: #F7F7F7;
+}
+main#app-root > section.white > *::selection {
+    background: #171717;
+    color: #F7F7F7;
+}
+main#app-root > section.white a.button {
+    color: white;
+    background-color: #32323d;
+}
+main#app-root > section.white a.button:focus, main#app-root > section.white a.button:hover, main#app-root > section.white a.button:active {
+    background-color: #747474;
+}
+
+::-moz-selection {
+    background: #F7F7F7;
+    color: #171717;
+}
+::selection {
+    background: #F7F7F7;
+    color: #171717;
+}
 main#app-root > section.dark {
-    background-color: #171717;
+    background: #171717;
     color: #F7F7F7;
 }
 main#app-root > section.yellow {
-    background-color: #FEEB15;
+    background: #FEEB15;
+    color: #171717;
+}
+main#app-root > section.yellow::selection {
+    background: #F7F7F7;
     color: #171717;
 }
 main#app-root > section.pink {
-    background-color: #E72D63;
+    background: #E72D63;
     color: #F7F7F7;
 }
 main#app-root > section.blue {
-    background-color: #02B5C8;
+    background: #02B5C8;
     color: #F7F7F7;
 }
 
@@ -135,6 +178,20 @@ section#account {
     grid-area: account;
 }
 
+section#account > p {
+    margin-bottom: 2em;
+}
+
+section#account div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+section#account div strong:nth-child(2) {
+    font-weight: bold;
+    margin-bottom: .2em;
+}
+
 section#credits {
     grid-area: credits;
 }
@@ -146,7 +203,7 @@ section#credits p, section#credits h1 {
 section#credits img {
     float: right;
     height: 15vh;
-    padding-top: 5vh;
+    padding-top: 3.5vh;
 }
 
 section#graph1 {

@@ -71,6 +71,10 @@ main#app-root > section {
     align-content: center;
     /* border-radius: .3em; */
     box-shadow: rgba(0,0,0,0.3) 2px 2px 20px;
+
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
 }
 
 main#app-root > section > h1 {
@@ -178,8 +182,14 @@ section#account {
     grid-area: account;
 }
 
+section#account:not(.connected) > h1 {
+    margin-bottom: 2px;
+    position: relative;
+    bottom: 4px;
+}
+
 section#account > p {
-    margin-bottom: 2em;
+    margin-top: 0;
 }
 
 section#account div {
@@ -196,6 +206,10 @@ section#credits {
     grid-area: credits;
 }
 
+section#credits h1 {
+    margin-bottom: 2px;
+}
+
 section#credits p, section#credits h1 {
     float: left;
 }
@@ -203,7 +217,6 @@ section#credits p, section#credits h1 {
 section#credits img {
     float: right;
     height: 15vh;
-    padding-top: 3.5vh;
 }
 
 section#graph1 {
@@ -236,4 +249,19 @@ section#graph2 {
 
 section#info3 {
     grid-area: info3;
+}
+
+div#graph-topArtists {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-gap: 2rem;
+    overflow: hidden;
+    overflow-x: auto;
+    width: 100%;
+    height: 85%;
+}
+
+div.graph-topArtists-artist > img {
+    width: 8rem;
+    border-radius: 100%;
 }

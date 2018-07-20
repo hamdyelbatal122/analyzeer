@@ -2,7 +2,9 @@ import "babel-polyfill";
 
 import io from "socket.io-client";
 import {WOW} from "wowjs";
+import Chart from "chart.js";
 import copy from "copy-text-to-clipboard";
+import durations from "durations";
 window.ncopy = copy;
 
 const socket = io();
@@ -73,6 +75,40 @@ async function process(data) {
         default:
             data.user.statusString = "Free";
     }
+
+    // Favorite tracks general stats
+    let counter = 0;
+    data.tracks.data.forEach(track => {
+        counter += track.duration;
+    });
+    data.tracks.totalDuration = counter;
+    data.tracks.totalDurationString = durations.seconds(counter).format();
+    data.tracks.averageDuration = Math.round(data.tracks.totalDuration / data.tracks.total);
+    data.tracks.averageDurationString = durations.seconds(data.tracks.averageDuration).format();
+
+    // Top artists
+    let topArtists = {};
+    data.tracks.data.forEach(track => {
+        if (!topArtists[track.artist.name]) {
+            topArtists[track.artist.name] = {
+                name: track.artist.name,
+                pic: track.artist.picture_medium,
+                tracks: [track]
+            };
+        } else {
+            topArtists[track.artist.name].tracks.push(track);
+        }
+    });
+    let topArtistsArray = [];
+    Object.keys(topArtists).forEach(key => {
+        topArtistsArray.push(topArtists[key]);
+    });
+    topArtistsArray.sort((a, b) => { return b.tracks.length - a.tracks.length; });
+    data.tracks.topArtists = topArtistsArray.slice(0,10);
+
+    // Charts datasets
+    window.charts = {};
+
     return data;
 }
 
@@ -92,7 +128,7 @@ function render(data) {
         <img src="${data.user.picture_medium}" alt="${data.user.name}'s photo'" />
         <h1>${data.user.name} <span>#${data.user.id}</span></h1>
         <h3>On Deezer since ${data.user.inscription_date} - From ${data.user.country}!<br/>
-            Subscription: ${data.user.status} (${data.user.statusString}).</h3>
+            Subscription: ${data.user.statusString}</h3>
         <a class="button" href="${data.user.link}" target="_blank">View on Deezer</a>
     </section>
     <section id="account" class="wow fadeInDown yellow" data-wow-delay="300ms">
@@ -108,10 +144,14 @@ function render(data) {
         </p>
     </section>
     <section id="info1" class="wow fadeInLeft white" data-wow-delay="950ms">
-        <h1>Info1</h1>
+        <h1>${data.tracks.total} Favorite Tracks</h1>
+        <p>Your playlist contains <strong>${data.tracks.totalDurationString}</strong> of music.<br/>
+        The average song is <strong>${data.tracks.averageDurationString}</strong> long.</p>
     </section>
     <section id="graph1" class="wow fadeInUp blue" data-wow-delay="800ms">
-        <h1>Graph1</h1>
+        <h1>Top artists</h1>
+        <div id="graph-topArtists">
+        </div>
     </section>
     <section id="stat1" class="wow fadeInRight pink" data-wow-delay="1s">
         <h1>Stat1</h1>
@@ -133,6 +173,7 @@ function render(data) {
     </section>`;
 
     renderAccountSection(data);
+    renderCharts(data);
 
     new WOW({live:false}).init();
 }
@@ -141,9 +182,10 @@ function renderAccountSection(data) {
     document.getElementById("account").innerHTML = `<h1>Analyzeer | ${window.analyzeer.statusString}</h1>`;
     switch(window.analyzeer.status) {
         case 2:
+            document.getElementById("account").setAttribute("class", document.getElementById("account").getAttribute("class")+" connected");
             if (window.analyzeer.public === true) {
                 document.getElementById("account").innerHTML += `
-                <p>Use this link to share your statistics:<br/><a class="button" href="/${data.user.id}" target="_blank">${window.location.host}/${data.user.id}</a> | <a href="#" onclick="window.ncopy('${window.location.host}/${data.user.id}');event.target.innerText = 'Copied!'; return false;">Copy</a>
+                <p>Use this link to share your statistics:   <a class="button" href="/${data.user.id}" target="_blank">${window.location.host}/${data.user.id}</a> | <a href="#" onclick="window.ncopy('${window.location.host}/${data.user.id}');event.target.innerText = 'Copied!'; return false;">Copy</a>
                 </p>`;
             } else {
                 document.getElementById("account").innerHTML += `
@@ -218,7 +260,7 @@ function renderAccountSection(data) {
             break;
         case 1:
             document.getElementById("account").innerHTML += `
-            <p>You're viewing ${data.user.name}'s Deezer statistics on Analyzeer.<br/><br/>
+            <p>You're viewing ${data.user.name}'s Deezer statistics on Analyzeer.<br/>
                 Analyzeer is a free tool that gives you an overview of your listening habits and trends. It can even send you a monthly summary email! <a class="button" href="/">Try it today. No registration needed.</a><br/><br/>
                 P.S: If you're ${data.user.name}, follow <a href="/">this link</a> to access your settings.
             </p>`;
@@ -228,4 +270,22 @@ function renderAccountSection(data) {
             <p>By creating an Analyzeer account, you can share your statistics with a unique link, track your listening habits over time, and get monthly summary emails. All of these features are optional and can be disabled at all time.<br/><br/>
                 <a class="button" href="/register" target="_blank" onclick="window.register();return false;">Register now!</a> It takes just a few seconds.`;
     }
+}
+
+function renderCharts(data) {
+    // Top Artists
+    let container = document.getElementById("graph-topArtists");
+    if (data.tracks.topArtists.length !== 10) {
+        container.innerHTML = `<h1>Sorry, we do not have enough data to display something here.`;
+    } else {
+        data.tracks.topArtists.forEach(artist => {
+            container.innerHTML += `
+            <div class="graph-topArtists-artist">
+                <img src="${artist.pic}"/>
+                <h1>${artist.name}</h1>
+                <h4>${artist.tracks.length} tracks on Favorites</h4>
+            </div>`;
+        });
+    }
+
 }

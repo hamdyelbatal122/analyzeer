@@ -1,6 +1,6 @@
 {
     "name": "analyzeer",
-    "alias": "analyzeer.squared.codebrew.fr",
+    "alias": "analyzeer.xyz",
     "env": {
         "APP_SETTINGS": "@analyzeer-settings"
     }

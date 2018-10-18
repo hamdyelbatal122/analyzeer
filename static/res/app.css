@@ -153,10 +153,10 @@ section#user h1 {
     font-size: 2.5rem;
     white-space: nowrap;
 }
-section#user h1 span {
+section > h1:first-of-type span {
     font-size: 1.2rem;
     font-weight: normal;
-    color: #72727d;
+    opacity: 0.5;
     vertical-align: middle;
 }
 
@@ -249,19 +249,4 @@ section#graph2 {
 
 section#info3 {
     grid-area: info3;
-}
-
-div#graph-topArtists {
-    display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    grid-gap: 2rem;
-    overflow: hidden;
-    overflow-x: auto;
-    width: 100%;
-    height: 85%;
-}
-
-div.graph-topArtists-artist > img {
-    width: 8rem;
-    border-radius: 100%;
 }

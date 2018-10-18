@@ -149,9 +149,9 @@ function render(data) {
         The average song is <strong>${data.tracks.averageDurationString}</strong> long.</p>
     </section>
     <section id="graph1" class="wow fadeInUp blue" data-wow-delay="800ms">
-        <h1>Top artists</h1>
-        <div id="graph-topArtists">
-        </div>
+        <h1>Top ${data.tracks.topArtists.length} artists <span>by # of tracks in Favorites</span></h1>
+        <canvas id="graph-topArtists">
+        </canvas>
     </section>
     <section id="stat1" class="wow fadeInRight pink" data-wow-delay="1s">
         <h1>Stat1</h1>
@@ -273,19 +273,69 @@ function renderAccountSection(data) {
 }
 
 function renderCharts(data) {
+    window.charts = [];
+    const Chart = require("chart.js");
+
     // Top Artists
     let container = document.getElementById("graph-topArtists");
     if (data.tracks.topArtists.length !== 10) {
         container.innerHTML = `<h1>Sorry, we do not have enough data to display something here.`;
     } else {
+        let dataset = {
+            labels: [],
+            datasets: [{
+                label: "# of tracks in Favorites",
+                data: [],
+                backgroundColor: [
+                    "#FEEB15",
+                    "#E72D63",
+                    "#171717",
+                    "#02B5C8",
+                    "#171717",
+                    "#FEEB15",
+                    "#E72D63",
+                    "#171717",
+                    "#02B5C8",
+                    "#E72D63"
+                ],
+                hoverBackgroundColor: [
+                    "#fff",
+                    "#fff",
+                    "#fff",
+                    "#fff",
+                    "#fff",
+                    "#fff",
+                    "#fff",
+                    "#fff",
+                    "#fff",
+                    "#fff"
+                ]
+            }]
+        };
         data.tracks.topArtists.forEach(artist => {
-            container.innerHTML += `
-            <div class="graph-topArtists-artist">
-                <img src="${artist.pic}"/>
-                <h1>${artist.name}</h1>
-                <h4>${artist.tracks.length} tracks on Favorites</h4>
-            </div>`;
+            dataset.labels.push(artist.name);
+            dataset.datasets[0].data.push(artist.tracks.length);
         });
+
+        window.charts.push(new Chart(container, {
+            type: "pie",
+            data: dataset,
+            options: {
+                cutoutPercentage: 50,
+                legend: {
+                    position: "right",
+                    labels: {
+                        fontColor: "#fff",
+                        fontStyle: "bold"
+                    }
+                },
+                layout: {
+                    padding: {
+                        bottom: 40
+                    }
+                }
+            }
+        }));
     }
 
 }

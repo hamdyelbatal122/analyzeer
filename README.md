@@ -24,7 +24,7 @@ To deploy this app in production using [Now](https://zeit.co/now), set a [secret
 }
 ```
 
-Then, run `now GitSquared/analyzeer`. See [Now's documentation on deploying git repos](https://zeit.co/docs/features/repositories) for more info on this command.
+Then, run `now hamdyelbatal122/analyzeer`. See [Now's documentation on deploying git repos](https://zeit.co/docs/features/repositories) for more info on this command.
 
 ### Running locally (static)
 Clone the repository, then create a `now-secrets.json` at the root of your clone containing the following:

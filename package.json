@@ -13,12 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GitSquared/analyzeer.git"
+    "url": "git+https://github.com/hamdyelbatal122/analyzeer.git"
   },
-  "author": "Squared <squared@codebrew.fr> (https://squared.codebrew.fr)",
+  "author": "Hamdy Elbatal <elbatalhamdy77@gmail.com> (https://github.com/hamdyelbatal122)",
   "license": "WTFPL",
   "bugs": {
-    "url": "https://github.com/GitSquared/analyzeer/issues"
+    "url": "https://github.com/hamdyelbatal122/analyzeer/issues"
   },
   "homepage": "https://analyzeer.xyz",
   "dependencies": {
